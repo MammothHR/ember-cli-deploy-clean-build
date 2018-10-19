@@ -14,7 +14,21 @@ ember install ember-cli-deploy-clean-build
 Usage
 ------------------------------------------------------------------------------
 
-[Longer description of how to use the addon in apps.]
+While it may be ideal to deploy from a clean environment (such as CI), sometimes you need to do that from a local build.  When doing this, there are several things that can sneak into a build with undesirable outcomes:
+- unstaged changes
+- symlinked packages
+
+This plugs into the ember-cli-deploy pipeline and ensures a clean build.
+
+It currently supports a single environmenet variable to override: `SAFETY_ASSURED`, e.g.
+
+```
+SAFETY_ASSURED=1 ember deploy production
+```
+
+
+
+NOTE: this makes use of bash commands, so currently only supports Linux environments.
 
 
 Contributing
