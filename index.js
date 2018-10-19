@@ -8,9 +8,8 @@ const validateGitStatus = function() {
   const currentGitStatus = execSync('git status --porcelain').toString().trim();
 
   if (currentGitStatus) {
-    this.log(currentGitStatus, { color: 'red' });
-
-    throw new Error('Cannot deploy when there are local unstaged changes');
+    this.log('Cannot deploy when there are local unstaged changes!', { color: 'red' });
+    this.log(`Git status: ${ currentGitStatus }`);
   } else {
     return true;
   }
@@ -20,10 +19,8 @@ const validateSymlinks = function() {
   const currentLinks = execSync('find ./node_modules -type l -maxdepth 1').toString().trim();
 
   if (currentLinks) {
-    this.log(`Currently linked packages: ${ currentLinks }`, { color: 'red' });
-    this.log(`Cannot deploy when there are linked packages`, { color: 'red' });
-
-    throw new Error('Cannot deploy when there are linked packages');
+    this.log(`Cannot deploy when there are symlinked packages!`, { color: 'red' });
+    this.log(`Linked packages: ${ currentLinks }`);
   } else {
     return true;
   }
@@ -49,7 +46,7 @@ module.exports = {
         if (validateGitStatus.call(this) && validateSymlinks.call(this)) {
           return Promise.resolve();
         } else {
-          return Promise.reject();
+          return Promise.reject('You are not deploying from a clean environment');
         }
       },
     });
